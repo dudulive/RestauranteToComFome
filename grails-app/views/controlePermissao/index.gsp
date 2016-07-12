@@ -25,63 +25,67 @@
 	border: 1px solid #000;
 	margin: 5px;
 }
+
 #divFormulario {
 	padding: 5px;
 }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		alert('Olá, Mundo!')
+		carregarListaUsuarios();
+		carregarListaPermissoes();
 	})
-	
-	function retornoSalvarUsuario(data){
-		if(data.mensagem == "OK"){
+
+	function carregarListaPermissoes() {
+		$.ajax({
+			method : "POST",
+			url : "listarPermissao",
+			data : {},
+			success : function(data) {
+				$("#divListaPermissao").html(data)
+			}
+		})
+	}
+
+	function retornoSalvarUsuario(data) {
+		if (data.mensagem == "OK") {
 			$("#divMensagem").html("Usuario Salvo com sucesso!!");
 			$("input[name=login]").val("");
-		}else{		
+			carregarListaUsuarios();
+		} else {
 			$("#divMensagem").html("Não foi possivel salvar usuario.");
 		}
+	}
+
+	function carregarListaUsuarios() {
+		$.ajax({
+			method : "POST",
+			url : "listarUsuarios",
+			data : {},
+			success : function(data) {
+				$("#divListaUsurarios").html(data)
+			}
+		})
 	}
 </script>
 </head>
 <body>
 	<div id="divUsuario">
 		<div id="divFormulario">
-		<div id="divMensagem"></div>
+			<div id="divMensagem"></div>
 			<g:formRemote name="formUsuario"
 				url="[controller: 'controlePermissao', action:'salvarUsuario']"
-				 onSuccess="retornoSalvarUsuario(data)">
+				onSuccess="retornoSalvarUsuario(data)">
 		Login <input type="text" name="login" value="" />
 				<input type="submit" name="salvar" value="Salvar" />
 			</g:formRemote>
 		</div>
-		<table>
-			<thead>
-				<th>Nome do Usuario</th>
-			</thead>
-			<g:each in="${usuarios}" var="usuario">
-				<tr>
-					<td>
-						${usuario.username}
-					</td>
-				</tr>
-			</g:each>
-		</table>
+		<div id="divListaUsurarios"></div>
 	</div>
 	<div id="divDetalhesUsuario"></div>
 	<div id="divPermissao">
-		<table>
-			<thead>
-				<th>Permissao</th>
-			</thead>
-			<g:each in="${permissoes}" var="permissao">
-				<tr>
-					<td>
-						${permissao.authority}
-					</td>
-				</tr>
-			</g:each>
-		</table>
+		<div id="divFormPermissao"></div>
+		<div id="divListaPermissao"></div>
 	</div>
 </body>
 </html>

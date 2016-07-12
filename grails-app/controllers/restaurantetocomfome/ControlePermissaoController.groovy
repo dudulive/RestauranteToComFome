@@ -9,9 +9,40 @@ import comun.Usuario;
 class ControlePermissaoController {
 
     def index() { 
-		def listaUsuarios = Usuario.list()
 		def listaPermissoes = Permissao.list()
-		render(view:"index", model: [usuarios:listaUsuarios, permissoes:listaPermissoes])
+		render(view:"index", model: [permissoes:listaPermissoes])
+	}
+	
+	def listarUsuarios(){
+		def listaUsuarios = Usuario.createCriteria().list{
+			order("username")
+		}
+		render(template:"listaUsuarios", model: [usuarios:listaUsuarios] ) 
+	}
+	
+	def getPermissao(){
+		
+	}
+	
+	def getUsuario(){
+		
+	}
+	
+	def listarPermissao(){
+		def listaPermissoes = Permissao.list()
+		render(template:"listaPermissao", model: [permissoes:listaPermissoes])
+	}
+	
+	def salvarPermissao(){
+		
+	}
+	
+	def excluirUsuario(){
+		
+	}
+	
+	def excuirPermissao(){
+		
 	}
 	
 	def salvarUsuario(){
