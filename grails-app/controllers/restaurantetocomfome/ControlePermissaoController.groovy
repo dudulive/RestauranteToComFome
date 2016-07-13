@@ -21,7 +21,8 @@ class ControlePermissaoController {
 	}
 	
 	def getPermissao(){
-		
+		Permissao permissao = Permissao.get(params.id);
+		render permissao as JSON
 	}
 	
 	def getUsuario(){
@@ -34,7 +35,22 @@ class ControlePermissaoController {
 	}
 	
 	def salvarPermissao(){
-		
+		def retorno = [:]
+		Permissao permissao ;
+		if(params.id){
+			permissao = Permissao.get(params.id)	
+		}else{
+		 permissao = new Permissao();
+		}
+		permissao.authority = params.permissao
+		permissao.validate()
+		if(!permissao.hasErrors()){
+		 permissao.save(flush:true)
+			retorno["mensagem"]="OK"
+		}else{
+			retorno["mensagem"]="ERROR"
+		}
+		render retorno as JSON
 	}
 	
 	def excluirUsuario(){

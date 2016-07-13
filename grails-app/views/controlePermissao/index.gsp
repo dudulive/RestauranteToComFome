@@ -26,7 +26,7 @@
 	margin: 5px;
 }
 
-#divFormulario {
+#divFormulario, #divFormPermissao {
 	padding: 5px;
 }
 </style>
@@ -57,6 +57,17 @@
 		}
 	}
 
+	function retornoSalvarPermissao(data) {
+		if (data.mensagem == "OK") {
+			$("#divMensagemPermissao").html("Permissão Salvo com sucesso!!");
+			$("#formPermissao input[name=permissao]").val("");
+			$("#formPermissao input[name=id]").val("");
+			carregarListaPermissoes();
+		} else {
+			$("#divMensagemPermissao").html("Não foi possivel salvar permissão.");
+		}
+	}
+	
 	function carregarListaUsuarios() {
 		$.ajax({
 			method : "POST",
@@ -64,6 +75,18 @@
 			data : {},
 			success : function(data) {
 				$("#divListaUsurarios").html(data)
+			}
+		})
+	}
+
+	function alterarPermissao(id){
+		$.ajax({
+			method : "POST",
+			url : "getPermissao",
+			data : {"id" : id},
+			success : function(data) {
+				$("#formPermissao input[name=permissao]").val(data.authority);	
+				$("#formPermissao input[name=id]").val(data.id);	
 			}
 		})
 	}
@@ -84,7 +107,16 @@
 	</div>
 	<div id="divDetalhesUsuario"></div>
 	<div id="divPermissao">
-		<div id="divFormPermissao"></div>
+		<div id="divFormPermissao">
+			<div id="divMensagemPermissao"></div>
+			<g:formRemote id="formPermissao" name="formPermissao"
+				url="[controller: 'controlePermissao', action:'salvarPermissao']"
+				onSuccess="retornoSalvarPermissao(data)">
+				 <input type="hidden" name="id"  />
+		Permissao <input type="text" name="permissao" value="" />
+				<input type="submit" name="salvar" value="Salvar" />
+			</g:formRemote>
+		</div>
 		<div id="divListaPermissao"></div>
 	</div>
 </body>
